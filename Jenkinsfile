@@ -23,11 +23,14 @@ pipeline {
             }
         }
         stage('Deploy to Kubernetes') { 
-            steps { 
-                    // apply deployment & service 
-                    bat 'kubectl apply -f deployment.yaml --validate=false' 
-                    bat 'kubectl apply -f service.yaml' 
-            } 
+    steps { 
+        withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+            bat 'kubectl apply -f deployment.yaml --validate=false'
+            bat 'kubectl apply -f service.yaml'
+        }
+    } 
+}
+
         }
     }
     post {

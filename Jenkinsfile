@@ -1,6 +1,7 @@
 pipeline {
     agent any
-    stages {
+    stages
+    {
         stage('Build Docker Image') {
             steps {
                 echo "Build Docker Image"
@@ -9,23 +10,26 @@ pipeline {
         }
         stage('Docker Login') {
             steps {
-                bat 'docker login -u tanzila123 -p Tan@12345'
+                  bat 'docker login -u tanzila123 -p Tan@12345'
+                }
             }
-        }
         stage('push Docker Image to Docker Hub') {
             steps {
                 echo "push Docker Image to Docker Hub"
-                bat "docker tag kubdemoapp:v1 tanzila123/basickubernetes:kubeimage1"
+                bat "docker tag kubdemoapp:v1 tanzila123/basickubernetes:kubeimage1"               
+                    
                 bat "docker push tanzila123/basickubernetes:kubeimage1"
+                
             }
         }
         stage('Deploy to Kubernetes') { 
             steps { 
-                    bat 'kubectl apply -f deployment.yaml --validate=false'
-                    bat 'kubectl apply -f service.yaml'
-                }
+                    // apply deployment & service 
+                    bat 'kubectl apply -f deployment.yaml --validate=false' 
+                    bat 'kubectl apply -f service.yaml' 
             } 
         }
+    }
     post {
         success {
             echo 'Pipeline completed successfully!'
